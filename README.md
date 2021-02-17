@@ -1,3 +1,10 @@
+**This is a fork of GraphGym from https://github.com/snap-stanford/GraphGym which includes a custom data loader (and a few configurations) for ingesting netlists.**
+
+How to train a GNN on netlists:
+- update run/configs/omitted_classification.yaml to point to your dataset directory (and name)
+- run `bash run_netlists.sh` from the `run/` directory
+
+Find the readme for the upstream repo below.
 # GraphGym
 GraphGym is a platform for designing and evaluating Graph Neural Networks (GNN).
 ### Highlights
