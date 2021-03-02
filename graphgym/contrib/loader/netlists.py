@@ -7,8 +7,12 @@ import os
 from graphgym.register import register_loader
 
 def find_netlists(rootdir='.'):
+    child_list = [rootdir]
+    if os.path.isdir(rootdir):
+        child_list = (os.path.join(rootdir, c) for c in os.listdir(rootdir))
+
     netlist_paths = []
-    for file_or_dir in (os.path.join(rootdir, c) for c in os.listdir(rootdir)):
+    for file_or_dir in child_list:
         if os.path.isdir(file_or_dir):
             contained_paths = find_netlists(file_or_dir)
             netlist_paths.extend(contained_paths)
