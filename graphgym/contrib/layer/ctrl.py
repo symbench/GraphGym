@@ -1,3 +1,9 @@
+"""
+This layer implements a graph embedding with roots in control theory. There
+are no learnable parameters. It also requires the following options in the cfg:
+
+"""
+from graphgym.config import cfg
 from graphgym.register import register_layer
 import torch.nn as nn
 import torch
@@ -224,6 +230,11 @@ def get_embedding(G):
     node_count = G.number_of_nodes()
     return torch.tensor(list(descriptor.values())).double().expand(node_count, -1)
 
+def check_config_compat(cfg):
+    assert cfg.gnn.layers_pre_mp == 0
+    assert cfg.gnn.layers_mp == 1
+    assert cfg.model.graph_pooling == 'mean'
+
 # TODO: Can I define a non-learnable pytorch layer for this?
 class Ctrl(nn.Module):
     r"""Implementation of CTRL+ layer (non-learning)
@@ -234,6 +245,7 @@ class Ctrl(nn.Module):
         #super(Ctrl, self).__init__(aggr=cfg.gnn.agg, **kwargs)
         super(Ctrl, self).__init__(**kwargs)
         # TODO: set
+        check_config_compat(cfg)
 
         self.in_channels = in_channels
         self.out_channels = out_channels
