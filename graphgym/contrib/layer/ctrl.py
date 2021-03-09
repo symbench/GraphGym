@@ -14,6 +14,11 @@ import numpy as np
 import numpy.linalg as LA
 import pandas as pd
 
+class InvalidConfigException(Exception):
+    def __init__(self, name, value):
+        message = f'{name} can only be {value} when using the CTRL layer'
+        super(InvalidConfigException, self).__init__(message)
+
 #default parameters
 INCLUDE_GRM = True
 INCLUDE_INVERSE_GRM = False 
@@ -231,9 +236,9 @@ def get_embedding(G):
     return torch.tensor(list(descriptor.values())).double().expand(node_count, -1)
 
 def check_config_compat(cfg):
-    assert cfg.gnn.layers_pre_mp == 0
-    assert cfg.gnn.layers_mp == 1
-    assert cfg.model.graph_pooling == 'mean'
+    assert cfg.gnn.layers_pre_mp == 0, InvalidConfigException('cfg.gnn.layers_pre_mp', 0)
+    assert cfg.gnn.layers_mp == 1, InvalidConfigException('cfg.gnn.layers_mp', 1)
+    assert cfg.model.graph_pooling == 'mean', InvalidConfigException('cfg.model.graph_pooling', 'mean')
 
 class Ctrl(nn.Module):
     r"""Implementation of CTRL+ layer (non-learning)
