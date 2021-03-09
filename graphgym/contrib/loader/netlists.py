@@ -1,3 +1,4 @@
+from graphgym.config import cfg
 from deepsnap.dataset import GraphDataset
 from deepsnap.graph import Graph
 import spice_completion.datasets as datasets
@@ -36,6 +37,7 @@ def spektral_to_deepsnap(dataset):
 
         Graph.add_graph_attr(nxgraph, 'graph_label', label)
         Graph.add_graph_attr(nxgraph, 'node_feature', node_features)
+        # TODO: Check the number of edges
         graphs.append(Graph(nxgraph))
 
     return graphs
@@ -44,12 +46,19 @@ def load_dataset(format, name, dataset_dir):
     if format != 'NetlistOmitted':
         return None
 
-    print('we are loading a dataset...?', format, name, dataset_dir)
     dataset_dir = '{}/{}'.format(dataset_dir, name)
     netlists = find_netlists(dataset_dir)
-    print('netlists:', netlists)
-    dataset = datasets.omitted(netlists)
+    dataset = datasets.omitted(netlists, min_edge_count=5)
     graphs = spektral_to_deepsnap(dataset)
-    return graphs
+
+    dataset = GraphDataset(
+        graphs,
+        task=cfg.dataset.task,
+        edge_train_mode=cfg.dataset.edge_train_mode,
+        edge_message_ratio=cfg.dataset.edge_message_ratio,
+        edge_negative_sampling_ratio=cfg.dataset.edge_negative_sampling_ratio,
+        minimum_node_per_graph=0)
+    dataset._num_graph_labels = len(datasets.helpers.component_types)
+    return dataset
 
 register_loader('omitted_netlists', load_dataset)
