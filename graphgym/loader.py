@@ -202,14 +202,17 @@ def create_dataset():
     min_node = filter_graphs()
 
     ## Create whole dataset
-    dataset = GraphDataset(
-        graphs,
-        task=cfg.dataset.task,
-        edge_train_mode=cfg.dataset.edge_train_mode,
-        edge_message_ratio=cfg.dataset.edge_message_ratio,
-        edge_negative_sampling_ratio=cfg.dataset.edge_negative_sampling_ratio,
-        resample_disjoint=cfg.dataset.resample_disjoint,
-        minimum_node_per_graph=min_node)
+    if type(graphs) is GraphDataset:
+        dataset = graphs
+    else:
+        dataset = GraphDataset(
+            graphs,
+            task=cfg.dataset.task,
+            edge_train_mode=cfg.dataset.edge_train_mode,
+            edge_message_ratio=cfg.dataset.edge_message_ratio,
+            edge_negative_sampling_ratio=cfg.dataset.edge_negative_sampling_ratio,
+            resample_disjoint=cfg.dataset.resample_disjoint,
+            minimum_node_per_graph=min_node)
 
     ## Transform the whole dataset
     dataset = transform_before_split(dataset)
