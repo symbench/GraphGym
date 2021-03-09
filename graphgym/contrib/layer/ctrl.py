@@ -235,16 +235,13 @@ def check_config_compat(cfg):
     assert cfg.gnn.layers_mp == 1
     assert cfg.model.graph_pooling == 'mean'
 
-# TODO: Can I define a non-learnable pytorch layer for this?
 class Ctrl(nn.Module):
     r"""Implementation of CTRL+ layer (non-learning)
 
     """
 
     def __init__(self, in_channels, out_channels, bias=True, **kwargs):
-        #super(Ctrl, self).__init__(aggr=cfg.gnn.agg, **kwargs)
         super(Ctrl, self).__init__(**kwargs)
-        # TODO: set
         check_config_compat(cfg)
 
         self.in_channels = in_channels
