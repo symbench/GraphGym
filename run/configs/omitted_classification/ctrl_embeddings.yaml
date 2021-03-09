@@ -1,0 +1,41 @@
+# The recommended basic settings for GNN
+out_dir: results
+dataset:
+  format: NetlistOmitted
+  name: kicad_github/
+  dir: /mnt/design.r/spice/datasets/
+  task: graph
+  task_type: classification
+  #transductive: True
+  split: [0.8, 0.2]
+  #augment_feature: []
+  #augment_feature_dims: [0]
+  #augment_feature_repr: position
+  #augment_label: ''
+  #augment_label_dims: 0
+  transform: none
+train:
+  batch_size: 32
+  eval_period: 20
+  ckpt_period: 100
+model:
+  type: gnn
+  loss_fun: cross_entropy
+  edge_decoding: dot
+  graph_pooling: mean
+gnn:
+  layers_pre_mp: 0
+  layers_mp: 1
+  layers_post_mp: 2
+  dim_inner: 154
+  stage_type: stack
+  layer_type: ctrl
+  batchnorm: True
+  act: prelu
+  dropout: 0.0
+  agg: add
+  normalize_adj: False
+optim:
+  optimizer: adam
+  base_lr: 0.01
+  max_epoch: 1000
