@@ -316,6 +316,9 @@ def set_cfg(cfg):
     # randomly use fewer edges for message passing
     cfg.gnn.keep_edge = 0.5
 
+    # iterations for ctrl layer
+    cfg.gnn.ctrl_iterations = 30
+
     # ------------------------------------------------------------------------ #
     # Optimizer options
     # ------------------------------------------------------------------------ #

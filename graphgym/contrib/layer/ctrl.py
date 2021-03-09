@@ -231,7 +231,7 @@ def add_vertex(G):
     return G
     
 def get_embedding(G):
-    descriptor = get_descriptor(G)
+    descriptor = get_descriptor(G, cfg.gnn.ctrl_iterations)
     node_count = G.number_of_nodes()
     return torch.tensor(list(descriptor.values())).double().expand(node_count, -1)
 
