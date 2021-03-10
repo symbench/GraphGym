@@ -230,9 +230,8 @@ def add_vertex(G):
             G.add_edge(new_vertex, n)
     return G
     
-def get_embedding(G, device):
+def get_embedding(G, node_count, device):
     descriptor = get_descriptor(G, cfg.gnn.ctrl_iterations)
-    node_count = G.number_of_nodes()
     return torch.tensor(list(descriptor.values()), dtype=torch.float, device=device).expand(node_count, -1)
 
 def check_config_compat(cfg):
@@ -255,8 +254,10 @@ class Ctrl(nn.Module):
     def forward(self, batch):
         """Set all the nodes to the graph embedding"""
         device = batch.node_feature.device
+        node_counts = [ G.number_of_nodes() for G in batch.G ]
         graph_data = [G if nx.is_connected(G) else add_vertex(G) for G in batch.G]
-        graph_embeddings = torch.cat([ get_embedding(G, device) for G in graph_data ])
+        graph_count_pairs = zip(graph_data, node_counts)
+        graph_embeddings = torch.cat([ get_embedding(G, count, device) for (G, count) in graph_count_pairs ])
         batch.node_feature = graph_embeddings
         return batch
 
