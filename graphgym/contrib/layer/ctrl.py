@@ -253,12 +253,18 @@ class Ctrl(nn.Module):
 
     def forward(self, batch):
         """Set all the nodes to the graph embedding"""
-        device = batch.node_feature.device
-        node_counts = [ G.number_of_nodes() for G in batch.G ]
-        graph_data = [G if nx.is_connected(G) else add_vertex(G) for G in batch.G]
-        graph_count_pairs = zip(graph_data, node_counts)
-        graph_embeddings = torch.cat([ get_embedding(G, count, device) for (G, count) in graph_count_pairs ])
-        batch.node_feature = graph_embeddings
+        if not hasattr(batch.G[0], 'cached_ctrl_embedding'):
+            device = batch.node_feature.device
+
+            for (i, G) in enumerate(batch.G):
+                count = G.number_of_nodes()
+                if not nx.is_connected(G):
+                    G = add_vertex(G)
+                setattr(batch.G[i], 'cached_ctrl_embedding', get_embedding(G, count, device))
+
+        graph_embeddings = [ G.cached_ctrl_embedding for G in batch.G ]
+        batch.node_feature = torch.cat(graph_embeddings)
+
         return batch
 
     def __repr__(self):
