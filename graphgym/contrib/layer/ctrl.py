@@ -256,14 +256,11 @@ class Ctrl(nn.Module):
         if not hasattr(batch.G[0], 'cached_ctrl_embedding'):
             device = batch.node_feature.device
 
-            print('caching value')
             for (i, G) in enumerate(batch.G):
                 count = G.number_of_nodes()
                 if not nx.is_connected(G):
                     G = add_vertex(G)
                 setattr(batch.G[i], 'cached_ctrl_embedding', get_embedding(G, count, device))
-        else:
-            print('using cached value')
 
         graph_embeddings = [ G.cached_ctrl_embedding for G in batch.G ]
         batch.node_feature = torch.cat(graph_embeddings)
