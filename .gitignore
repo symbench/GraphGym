@@ -3,3 +3,6 @@ run/datasets/data/
 **/__pycache__/
 **/.ipynb_checkpoints
 .idea/
+build/
+dist/
+*.egg-info/
