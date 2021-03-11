@@ -1,6 +1,5 @@
 from graphgym.config import cfg
 from deepsnap.dataset import GraphDataset
-from deepsnap.graph import Graph
 import spice_completion.datasets as datasets
 import torch
 import os
@@ -22,26 +21,6 @@ def find_netlists(rootdir='.'):
 
     return netlist_paths
 
-def ensure_no_nan(tensor):
-    nan_idx = torch.isnan(tensor).nonzero(as_tuple=True)
-    nan_count = nan_idx[0].shape[0]
-    assert nan_count == 0, 'nodes contain nans'
-
-def spektral_to_deepsnap(dataset):
-    graphs = []
-    for sgraph in dataset:
-        nxgraph = dataset.to_networkx(sgraph)
-        label = torch.tensor([sgraph.y.argmax()])
-        node_features = torch.tensor(sgraph.x)
-        ensure_no_nan(node_features)
-
-        Graph.add_graph_attr(nxgraph, 'graph_label', label)
-        Graph.add_graph_attr(nxgraph, 'node_feature', node_features)
-        # TODO: Check the number of edges
-        graphs.append(Graph(nxgraph))
-
-    return graphs
-
 def load_dataset(format, name, dataset_dir):
     if format != 'NetlistOmitted':
         return None
@@ -49,7 +28,7 @@ def load_dataset(format, name, dataset_dir):
     dataset_dir = '{}/{}'.format(dataset_dir, name)
     netlists = find_netlists(dataset_dir)
     dataset = datasets.omitted(netlists, min_edge_count=5)
-    graphs = spektral_to_deepsnap(dataset)
+    graphs = dataset.to_deepsnap()
 
     dataset = GraphDataset(
         graphs,
