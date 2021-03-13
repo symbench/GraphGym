@@ -1,7 +1,13 @@
+import os
 import setuptools
+import subprocess
+
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
+
+req_install_command = ["bash", "install.sh"]
+subprocess.call(req_install_command)
 
 setuptools.setup(
     name="graphgym",
