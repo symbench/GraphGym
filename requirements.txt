@@ -1,12 +1,10 @@
 yacs
 tensorboardx
-torch
-torch-scatter
-torch-geometric
-deepsnap
 ogb
 numpy
 pandas
+torch-geometric
+controlpy
 scipy
 scikit-learn
 matplotlib
