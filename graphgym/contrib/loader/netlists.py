@@ -36,6 +36,7 @@ def load_dataset(format, name, dataset_dir):
         edge_train_mode=cfg.dataset.edge_train_mode,
         edge_message_ratio=cfg.dataset.edge_message_ratio,
         edge_negative_sampling_ratio=cfg.dataset.edge_negative_sampling_ratio,
+        resample_disjoint=cfg.dataset.resample_disjoint,
         minimum_node_per_graph=0)
     dataset._num_graph_labels = len(datasets.helpers.component_types)
     return dataset
