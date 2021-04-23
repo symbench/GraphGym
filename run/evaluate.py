@@ -67,4 +67,7 @@ if __name__ == '__main__':
             pred_classes = pred.argmax(axis=1)
             correct += (pred_classes == true).nonzero().shape[0]
             total += true.shape[0]
-    print('accuracy:', correct/total, f'({correct}/{total})')
+    if sys.stdout.isatty():
+        print('accuracy:', correct/total, f'({correct}/{total})')
+    else:
+        print(correct/total)
