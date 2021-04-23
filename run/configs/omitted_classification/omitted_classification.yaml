@@ -1,23 +1,18 @@
 # The recommended basic settings for GNN
-out_dir: omitted_results
+out_dir: omitted_results_5fold_b1024_2post
 dataset:
   format: NetlistOmitted
-  name: kicad_github/
-  dir: /mnt/design.r/spice/datasets/
+  name: FOLD
+  dir: /home/brian/projektek/design.r/graph-gym-exp/splits/kicad_github/5fold/
   task: graph
   task_type: classification
-  #transductive: True
-  split: [0.8, 0.2]
-  #augment_feature: []
-  #augment_feature_dims: [0]
-  #augment_feature_repr: position
-  #augment_label: ''
-  #augment_label_dims: 0
+  split: [0.85, 0.15]
   transform: none
 train:
-  batch_size: 4
+  batch_size: 1024
   eval_period: 20
   ckpt_period: 100
+  ckpt_clean: False
 model:
   type: gnn
   loss_fun: cross_entropy
@@ -26,7 +21,7 @@ model:
 gnn:
   layers_pre_mp: 1
   layers_mp: 2
-  layers_post_mp: 1
+  layers_post_mp: 2
   dim_inner: 256
   layer_type: generalconv
   stage_type: stack
@@ -38,4 +33,4 @@ gnn:
 optim:
   optimizer: adam
   base_lr: 0.01
-  max_epoch: 400
+  max_epoch: 1000
