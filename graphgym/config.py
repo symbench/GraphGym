@@ -118,6 +118,11 @@ def set_cfg(cfg):
     # Dimension for edge feature. Updated by the real dim of the dataset
     cfg.dataset.edge_dim = 128
 
+    # TODO: FIXME: This is a bit of a hack since it only applies to netlists
+    cfg.dataset.mean = None
+    cfg.dataset.stddev = None
+    cfg.dataset.resample = False
+
     # ============== Link/edge tasks only
 
     # all or disjoint

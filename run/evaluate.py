@@ -3,6 +3,7 @@ import random
 import numpy as np
 import argparse
 import torch
+import sys
 
 from graphgym.config import (cfg, assert_cfg)
 from graphgym.loader import create_dataset, create_loader
@@ -50,6 +51,7 @@ if __name__ == '__main__':
     auto_select_device()
 
     # Set learning environment
+    # TODO: pass mean, std
     datasets = create_dataset()
     loaders = create_loader(datasets)
     model = create_model(datasets)

@@ -1,8 +1,10 @@
 from graphgym.config import cfg
 from deepsnap.dataset import GraphDataset
 import spice_completion.datasets as datasets
+import spice_completion.datasets.helpers as h
 import torch
 import os
+import numpy as np
 
 from graphgym.register import register_loader
 
@@ -27,8 +29,14 @@ def load_dataset(format, name, dataset_dir):
 
     dataset_dir = '{}/{}'.format(dataset_dir, name)
     netlists = find_netlists(dataset_dir)
-    dataset = datasets.omitted(netlists, min_edge_count=5)
-    graphs = dataset.to_deepsnap()
+    if cfg.dataset.mean:
+        mean = np.load(cfg.dataset.mean)
+        stddev = np.load(cfg.dataset.stddev)
+        dataset = datasets.omitted(netlists, min_edge_count=5, resample=cfg.dataset.resample, mean=mean, std=stddev)
+    else:
+        dataset = datasets.omitted(netlists, min_edge_count=5, resample=cfg.dataset.resample)
+
+    graphs = h.to_deepsnap(dataset)
 
     dataset = GraphDataset(
         graphs,

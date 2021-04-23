@@ -28,7 +28,7 @@ def load_dataset(format, name, dataset_dir):
 
     dataset_dir = '{}/{}'.format(dataset_dir, name)
     netlists = find_netlists(dataset_dir)
-    dataset = PrototypeLinkDataset(netlists)
+    dataset = PrototypeLinkDataset(netlists, normalize=False)
     graphs = h.to_deepsnap(dataset)
 
     return graphs
